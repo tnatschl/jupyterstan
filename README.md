@@ -10,7 +10,8 @@ interface that simply returns a `pystan.Model` object.
 In addition, it bundles Arvinds-ds `stan_code_helper` package to improve
 syntax highlighting for stan cells.
 
-## Installation
+
+## Installation
 
 To install the library:
 
