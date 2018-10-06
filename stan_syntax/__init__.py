@@ -3,7 +3,7 @@
 
 import os.path
 
-__version__ = '0.0.2'
+__version__ = "0.0.2"
 
 
 def _jupyter_nbextension_paths():
@@ -11,13 +11,15 @@ def _jupyter_nbextension_paths():
     # Windows.
     # In contrast, require is a requirejs path, and thus must use `/` as the
     # path separator.
-    return [dict(
-        section='notebook',
-        # src is relative to current module
-        src=os.path.join('static', 'stan_syntax'),
-        # dest directory is in the `nbextensions/` namespace
-        dest='stan_code_helper',
-        # require is also in the `nbextensions/` namespace
-        # must use / as path.sep
-        require='stan_code_helper/main',
-    )]
+    return [
+        dict(
+            section="notebook",
+            # src is relative to current module
+            src=os.path.join("static", "stan_syntax"),
+            # dest directory is in the `nbextensions/` namespace
+            dest="stan_code_helper",
+            # require is also in the `nbextensions/` namespace
+            # must use / as path.sep
+            require="stan_code_helper/main",
+        )
+    ]
