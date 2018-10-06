@@ -15,8 +15,16 @@ setup(
     packages=find_packages(),
     install_requires=["ipython", "pystan"],
     package_data={
-        '': ['**/*.js', '**/*.css', '**/*.yaml', '**/*.md']
+        'stan_syntax': [
+            'static/stan_syntax/*.js',
+            'static/stan_syntax/*.css',
+            'static/stan_syntax/*.yaml',
+            'static/stan_syntax/*.md'
+        ]
     },
+    data_files=[
+        ('etc/jupyter/nbconfig/notebook.d/', ['stan_syntax.json'])
+    ],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Framework :: IPython",
