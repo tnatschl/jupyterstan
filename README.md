@@ -3,11 +3,11 @@
 `jupyterstan` is a package to help development of Stan models (using `pystan`)
 in jupyter notebooks.
 
-The package is heavily based on @Arvinds-ds
+The package is heavily based on Arvinds-ds
 [stanmagic](https://github.com/Arvinds-ds/stanmagic) package, but provides an
 interface that simply returns a `pystan.Model` object.
 
-In addition, it bundles @Arvinds-ds `stan_code_helper` package to improve
+In addition, it bundles Arvinds-ds `stan_code_helper` package to improve
 syntax highlighting for stan cells.
 
 ## Installation
