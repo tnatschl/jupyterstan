@@ -14,6 +14,9 @@ setup(
     url="https://github.com/janfreyberg/jupyterstan",
     packages=find_packages(),
     install_requires=["ipython", "pystan"],
+    package_data={
+        '': ['**/*.js', '**/*.css', '**/*.yaml', '**/*.md']
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Framework :: IPython",
