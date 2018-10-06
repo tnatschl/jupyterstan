@@ -9,6 +9,7 @@ setup(
     version="0.0.1",
     description="Magics for defining stan code in notebooks.",
     long_description=readme,
+    long_description_content_type="text/markdown",
     author="Jan Freyberg",
     author_email="jan.freyberg@gmail.com",
     url="https://github.com/janfreyberg/jupyterstan",
