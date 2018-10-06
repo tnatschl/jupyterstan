@@ -16,14 +16,7 @@ syntax highlighting for stan cells.
 To install the library:
 
 ```
-pip install git+https://github.com/janfreyberg/jupyterstan.git
-```
-
-To enable the syntax highlighting:
-
-```
-jupyter nbextension install --py stan_syntax --sys-prefix
-jupyter nbextension enable stan_syntax --py --sys-prefix
+pip install jupyterstan
 ```
 
 ## Usage
