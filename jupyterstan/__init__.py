@@ -42,7 +42,9 @@ class StanMagics(Magics):
         named _stan_model (the default), or a custom name (specified
         by writing %%stan <variable_name>).
         """
-        args = line.strip().split(" ")
+
+        args = line.strip().split(' ')
+
         if len(args) == 0:
             varname = "_stan_model"
         else:
@@ -55,18 +57,20 @@ class StanMagics(Magics):
 
         print(
             f"Creating pystan model & assigning it to variable "
-            f'name "{varname}".'
+            f"name \"{varname}\"."
         )
 
-        with capture_output(display=False) as capture:
-            try:
-                _stan_model = pystan.StanModel(model_code=cell)
-            except Exception:
-                print(f"Error creating Stan model. Output:")
-                print(capture)
+        try:
+            with capture_output(display=False) as capture:
+                _stan_model = pystan.StanModel(
+                    model_code=cell
+                )
+        except Exception:
+            print(f"Error creating Stan model. Output:")
+            print(capture)
 
         self.shell.user_ns[varname] = _stan_model
-        print(f'StanModel now available as variable "{varname}"!')
+        print(f"StanModel now available as variable \"{varname}\"!")
 
 
 def load_ipython_extension(ipython):
