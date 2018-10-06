@@ -27,6 +27,12 @@ jupyter nbextension enable stan_syntax --py --sys-prefix
 
 ## Usage
 
+To use the `magic` in your notebook, you need to lead the extension:
+
+```
+%load_ext jupyterstan
+```
+
 To define a stan model inside a jupyter notebook, start a cell with the `%%stan`
 magic. You can also provide a variable name, which is the variable name that
 the `pystan.Model` object will be assigned to. For example:
@@ -45,7 +51,6 @@ parameters {
 model {
     female ~ binomial(male + female, p);
 }
-
 ```
 
 Then, to use your defined model:

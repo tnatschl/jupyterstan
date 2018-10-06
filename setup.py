@@ -6,7 +6,7 @@ readme = open("README.md").read()
 
 setup(
     name="jupyterstan",
-    version="0.1.0",
+    version="0.1.1",
     description="Magics for defining stan code in notebooks.",
     long_description=readme,
     long_description_content_type="text/markdown",
