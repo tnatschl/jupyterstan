@@ -1,3 +1,7 @@
+import re
+import json
+from typing import Tuple, List, Dict
+
 from IPython.core.magic import Magics, cell_magic, magics_class
 
 from IPython.utils.capture import capture_output
@@ -28,6 +32,38 @@ def check_program(program):
     return "pystan"
 
 
+def parse_args(argstring: str) -> Tuple[str, Dict]:
+    # users can separate arguments with commas and/or whitespace
+    split_pattern = r'(?![^)(]*\([^)(]*?\)\)),\s+(?![^\[]*\])'
+    args_kwargs = [arg for arg in re.split(split_pattern, argstring)
+                   if len(arg) > 0]
+    kwargs = [arg for arg in args_kwargs if '=' in arg]
+    args = [arg for arg in args_kwargs if arg not in kwargs]
+
+    if len(args) == 0:
+        varname = "_stan_model"
+    else:
+        varname = args[0]
+
+    kwargs = dict([
+        re.split(r'\s*=\s*', kwarg) for kwarg in kwargs
+    ])
+
+    # set defaults:
+    kwargs['model_name'] = kwargs.get('model_name', varname)
+    # the following should be booleans:
+    if 'verbose' in kwargs:
+        kwargs['verbose'] = kwargs['verbose'] == 'True'
+    # the following should be lists:
+    for kwarg in ['include_paths', 'extra_compile_args']:
+        if kwarg in kwargs:
+            kwargs[kwarg] = json.loads(kwargs[kwarg])
+            if not isinstance(kwargs[kwarg], list):
+                raise TypeError(f"{kwarg} should be a list.")
+
+    return varname, kwargs
+
+
 @magics_class
 class StanMagics(Magics):
     def __init__(self, shell):
@@ -43,12 +79,7 @@ class StanMagics(Magics):
         by writing %%stan <variable_name>).
         """
 
-        args = line.strip().split(' ')
-
-        if len(args) == 0:
-            varname = "_stan_model"
-        else:
-            varname = args[0]
+        varname, stan_opts = parse_args(line)
 
         if not varname.isidentifier():
             raise ValueError(
@@ -59,11 +90,15 @@ class StanMagics(Magics):
             f"Creating pystan model & assigning it to variable "
             f"name \"{varname}\"."
         )
+        print(
+            f"Stan options:\n",
+            stan_opts
+        )
 
         try:
             with capture_output(display=False) as capture:
                 _stan_model = pystan.StanModel(
-                    model_code=cell
+                    model_code=cell, **stan_opts
                 )
         except Exception:
             print(f"Error creating Stan model. Output:")
