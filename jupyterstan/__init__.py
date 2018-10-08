@@ -49,6 +49,13 @@ def parse_args(argstring: str) -> Tuple[str, Dict]:
     kwargs = vars(parser.parse_args(argstring.split()))
 
     variable_name = kwargs.pop('variable_name')
+
+    if not variable_name.isidentifier():
+        raise ValueError(
+            f"The variable name {variable_name} is "
+            f"not a valid python variable name."
+        )
+
     # set defaults:
     if kwargs['model_name'] is None:
         kwargs['model_name'] = variable_name
@@ -72,12 +79,6 @@ class StanMagics(Magics):
         """
 
         variable_name, stan_opts = parse_args(line)
-
-        if not variable_name.isidentifier():
-            raise ValueError(
-                f"The variable name {variable_name} is "
-                f"not a valid variable name."
-            )
 
         print(
             f"Creating pystan model & assigning it to variable "
