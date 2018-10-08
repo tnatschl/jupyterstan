@@ -1,3 +1,9 @@
+import re
+import ast
+from typing import Tuple, List, Dict
+
+import argparse
+
 from IPython.core.magic import Magics, cell_magic, magics_class
 
 from IPython.utils.capture import capture_output
@@ -28,6 +34,35 @@ def check_program(program):
     return "pystan"
 
 
+def parse_args(argstring: str) -> Tuple[str, Dict]:
+    # users can separate arguments with commas and/or whitespace
+    parser = argparse.ArgumentParser(
+        description='Process pystan arguments.'
+    )
+    parser.add_argument('variable_name', nargs='?', default='_stan_model')
+    parser.add_argument('--model_name')
+    parser.add_argument('--include_paths', nargs='*')
+    parser.add_argument('--boost_lib')
+    parser.add_argument('--eigen_lib')
+    parser.add_argument('--verbose', '-v', action='store_true')
+    parser.add_argument('--obfuscate_model_name', action='store_false')
+    kwargs = vars(parser.parse_args(argstring.split()))
+
+    variable_name = kwargs.pop('variable_name')
+
+    if not variable_name.isidentifier():
+        raise ValueError(
+            f"The variable name {variable_name} is "
+            f"not a valid python variable name."
+        )
+
+    # set defaults:
+    if kwargs['model_name'] is None:
+        kwargs['model_name'] = variable_name
+
+    return variable_name, kwargs
+
+
 @magics_class
 class StanMagics(Magics):
     def __init__(self, shell):
@@ -42,31 +77,30 @@ class StanMagics(Magics):
         named _stan_model (the default), or a custom name (specified
         by writing %%stan <variable_name>).
         """
-        args = line.strip().split(" ")
-        if len(args) == 0:
-            varname = "_stan_model"
-        else:
-            varname = args[0]
 
-        if not varname.isidentifier():
-            raise ValueError(
-                f"The variable name {varname} is not a valid variable name."
-            )
+        variable_name, stan_opts = parse_args(line)
 
         print(
             f"Creating pystan model & assigning it to variable "
-            f'name "{varname}".'
+            f"name \"{variable_name}\"."
+        )
+        print(
+            f"Stan options:\n",
+            stan_opts
         )
 
-        with capture_output(display=False) as capture:
-            try:
-                _stan_model = pystan.StanModel(model_code=cell)
-            except Exception:
-                print(f"Error creating Stan model. Output:")
-                print(capture)
+        try:
+            with capture_output(display=False) as capture:
+                _stan_model = pystan.StanModel(
+                    model_code=cell, **stan_opts
+                )
+        except Exception:
+            print(f"Error creating Stan model. Output:")
+            print(capture)
+            raise
 
-        self.shell.user_ns[varname] = _stan_model
-        print(f'StanModel now available as variable "{varname}"!')
+        self.shell.user_ns[variable_name] = _stan_model
+        print(f"StanModel now available as variable \"{variable_name}\"!")
 
 
 def load_ipython_extension(ipython):
