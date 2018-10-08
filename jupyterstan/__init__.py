@@ -1,6 +1,8 @@
 import re
-import json
+import ast
 from typing import Tuple, List, Dict
+
+import argparse
 
 from IPython.core.magic import Magics, cell_magic, magics_class
 
@@ -34,34 +36,24 @@ def check_program(program):
 
 def parse_args(argstring: str) -> Tuple[str, Dict]:
     # users can separate arguments with commas and/or whitespace
-    split_pattern = r'(?![^)(]*\([^)(]*?\)\)),\s+(?![^\[]*\])'
-    args_kwargs = [arg for arg in re.split(split_pattern, argstring)
-                   if len(arg) > 0]
-    kwargs = [arg for arg in args_kwargs if '=' in arg]
-    args = [arg for arg in args_kwargs if arg not in kwargs]
+    parser = argparse.ArgumentParser(
+        description='Process pystan arguments.'
+    )
+    parser.add_argument('variable_name', nargs='?', default='_stan_model')
+    parser.add_argument('--model_name')
+    parser.add_argument('--include_paths', nargs='*')
+    parser.add_argument('--boost_lib')
+    parser.add_argument('--eigen_lib')
+    parser.add_argument('--verbose', '-v', action='store_true')
+    parser.add_argument('--obfuscate_model_name', action='store_false')
+    kwargs = vars(parser.parse_args(argstring.split()))
 
-    if len(args) == 0:
-        varname = "_stan_model"
-    else:
-        varname = args[0]
-
-    kwargs = dict([
-        re.split(r'\s*=\s*', kwarg) for kwarg in kwargs
-    ])
-
+    variable_name = kwargs.pop('variable_name')
     # set defaults:
-    kwargs['model_name'] = kwargs.get('model_name', varname)
-    # the following should be booleans:
-    if 'verbose' in kwargs:
-        kwargs['verbose'] = kwargs['verbose'] == 'True'
-    # the following should be lists:
-    for kwarg in ['include_paths', 'extra_compile_args']:
-        if kwarg in kwargs:
-            kwargs[kwarg] = json.loads(kwargs[kwarg])
-            if not isinstance(kwargs[kwarg], list):
-                raise TypeError(f"{kwarg} should be a list.")
+    if kwargs['model_name'] is None:
+        kwargs['model_name'] = variable_name
 
-    return varname, kwargs
+    return variable_name, kwargs
 
 
 @magics_class
@@ -79,16 +71,17 @@ class StanMagics(Magics):
         by writing %%stan <variable_name>).
         """
 
-        varname, stan_opts = parse_args(line)
+        variable_name, stan_opts = parse_args(line)
 
-        if not varname.isidentifier():
+        if not variable_name.isidentifier():
             raise ValueError(
-                f"The variable name {varname} is not a valid variable name."
+                f"The variable name {variable_name} is "
+                f"not a valid variable name."
             )
 
         print(
             f"Creating pystan model & assigning it to variable "
-            f"name \"{varname}\"."
+            f"name \"{variable_name}\"."
         )
         print(
             f"Stan options:\n",
@@ -103,9 +96,10 @@ class StanMagics(Magics):
         except Exception:
             print(f"Error creating Stan model. Output:")
             print(capture)
+            raise
 
-        self.shell.user_ns[varname] = _stan_model
-        print(f"StanModel now available as variable \"{varname}\"!")
+        self.shell.user_ns[variable_name] = _stan_model
+        print(f"StanModel now available as variable \"{variable_name}\"!")
 
 
 def load_ipython_extension(ipython):
