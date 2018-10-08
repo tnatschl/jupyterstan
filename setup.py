@@ -14,18 +14,16 @@ setup(
     author_email="jan.freyberg@gmail.com",
     url="https://github.com/janfreyberg/jupyterstan",
     packages=find_packages(),
-    install_requires=["ipython", "pystan"],
+    install_requires=["ipython", "pystan", "humanize"],
     package_data={
-        'stan_syntax': [
-            'static/stan_syntax/*.js',
-            'static/stan_syntax/*.css',
-            'static/stan_syntax/*.yaml',
-            'static/stan_syntax/*.md'
+        "stan_syntax": [
+            "static/stan_syntax/*.js",
+            "static/stan_syntax/*.css",
+            "static/stan_syntax/*.yaml",
+            "static/stan_syntax/*.md",
         ]
     },
-    data_files=[
-        ('etc/jupyter/nbconfig/notebook.d/', ['stan_syntax.json'])
-    ],
+    data_files=[("etc/jupyter/nbconfig/notebook.d/", ["stan_syntax.json"])],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Framework :: IPython",
