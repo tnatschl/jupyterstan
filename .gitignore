@@ -5,6 +5,8 @@ __pycache__/
 *$py.class
 .stan
 
+.pytest_cache/
+
 .DS_Store
 
 # C extensions
