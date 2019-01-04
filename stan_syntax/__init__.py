@@ -17,9 +17,9 @@ def _jupyter_nbextension_paths():
             # src is relative to current module
             src=os.path.join("static", "stan_syntax"),
             # dest directory is in the `nbextensions/` namespace
-            dest="stan_code_helper",
+            dest="stan_syntax",
             # require is also in the `nbextensions/` namespace
             # must use / as path.sep
-            require="stan_code_helper/main",
+            require="stan_syntax/main",
         )
     ]

@@ -5,5 +5,3 @@ Main: main.js
 Description: Synatx highlighting of Stan code specified in %%stan magic
 Link: README.md
 Parameters:
-
-
