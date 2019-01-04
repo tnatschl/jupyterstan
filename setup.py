@@ -29,11 +29,13 @@ setup(
         (
             "share/jupyter/nbextensions/stan_syntax",
             [
-                "stan_syntax/static/stan_syntax/main.js",
-                "stan_syntax/static/stan_syntax/stan.js",
+                "stan_syntax/static/main.js",
+                "stan_syntax/static/stan.js",
+                "stan_syntax/static/stan.css",
             ],
         ),
     ],
+    zip_safe=False,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Framework :: IPython",

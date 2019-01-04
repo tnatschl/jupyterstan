@@ -1,8 +1,6 @@
 # coding: utf-8
 """Provides magically-named functions for python-package installation."""
 
-import os.path
-
 __version__ = "0.0.2"
 
 
@@ -15,7 +13,7 @@ def _jupyter_nbextension_paths():
         dict(
             section="notebook",
             # src is relative to current module
-            src=os.path.join("static", "stan_syntax"),
+            src="static",
             # dest directory is in the `nbextensions/` namespace
             dest="stan_syntax",
             # require is also in the `nbextensions/` namespace
