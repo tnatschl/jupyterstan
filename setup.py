@@ -24,7 +24,16 @@ setup(
             "static/stan_syntax/*.md",
         ]
     },
-    data_files=[("etc/jupyter/nbconfig/notebook.d/", ["stan_syntax.json"])],
+    data_files=[
+        ("etc/jupyter/nbconfig/notebook.d/", ["stan_syntax.json"]),
+        (
+            "share/jupyter/nbextensions/stan_syntax",
+            [
+                "stan_syntax/static/stan_syntax/main.js",
+                "stan_syntax/static/stan_syntax/stan.js",
+            ],
+        ),
+    ],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Framework :: IPython",
