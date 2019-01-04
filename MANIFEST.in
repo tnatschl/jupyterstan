@@ -5,3 +5,4 @@ global-exclude *.py[co]
 
 recursive-include jupyter-config *.json
 recursive-include stan_syntax/static *.js
+recursive-include stan_syntax/static *.css
