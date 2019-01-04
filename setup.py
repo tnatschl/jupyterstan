@@ -15,6 +15,7 @@ setup(
     url="https://github.com/janfreyberg/jupyterstan",
     packages=find_packages(),
     install_requires=["ipython", "pystan", "humanize"],
+    include_package_data=True,
     package_data={
         "stan_syntax": [
             "static/stan_syntax/*.js",
