@@ -25,7 +25,7 @@ setup(
         ]
     },
     data_files=[
-        ("etc/jupyter/nbconfig/notebook.d/", ["stan_syntax.json"]),
+        ("etc/jupyter/nbconfig/notebook.d", ["stan_syntax.json"]),
         (
             "share/jupyter/nbextensions/stan_syntax",
             [

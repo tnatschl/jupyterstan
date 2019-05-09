@@ -15,7 +15,8 @@ syntax highlighting for stan cells.
 - Stan language syntax highlighting in all cells beginning with `%%stan`
 - Compile a stan model and save it as a pystan variable by running a `%%stan` cell
 - No longer worry about `model_code`, reading in stan files, etc.
-
+- Support for caching compiled stan models: re-executing a cell with the same code will 
+  not recompile the code but uses a cached version.
 
 ## Installation
 
